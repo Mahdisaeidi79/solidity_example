@@ -1,7 +1,6 @@
 //SPDX-License-Identifier: MIT
 
 pragma solidity 0.8.13;
-error
 
 contract Transfer {
     address payable sender;
@@ -12,16 +11,10 @@ contract Transfer {
         sender = payable(msg.sender);
     }
     function transferFrom(address payable _from, address payable _to, uint _value) public returns (bool success) {
-        if(_from != sender){
-            revert('from must be sender');
-        }
-        if(_to == sender){
-            revert('to must not be sender');
-        }
+        require(_from == sender);
+        require(_to != sender);
         uint balance = balances[msg.sender];
-        if(_value > balance){
-            revert('insufficient balance');
-        }
+        require(_value < balance);
         _to.transfer(_value);
 
         unchecked {
